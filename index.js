@@ -1,10 +1,13 @@
 // Packages
 const fs = require("fs");
+const util = require("util");
 const inquirer = require("inquirer");
 
+const writeFileAsync = util.promisify(fs.writeFile);
+
 // Prompt user with questions
-inquirer
-  .prompt([
+const promptOrder = () => {
+  return inquirer.prompt([
     {
       type: "input",
       message: "What is your name",
@@ -33,16 +36,53 @@ inquirer
       choices: ["Cash", "Debit", "Credit"],
       name: "paymentType",
     },
-  ])
-  .then((response) => {
-    console.log(response);
+  ]);
+};
 
-    const orderName = `order-${response.name
-      .toLowerCase()
-      .split(" ")
-      .join("")}.txt`;
+const genOrderHTML = (data) => `
+<!DOCTYPE html>
+<html lang="en">
 
-    fs.writeFile(orderName, JSON.stringify(response, null, "\t"), (err) =>
-      err ? console.error(err) : console.log("Success!")
-    );
-  });
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizza Order</title>
+</head>
+
+<body>
+  <section class="order">
+    <h1>Order for ${data.name}</h1>
+    <h3>Pizza Order</h3>
+    <p>Number of pizzas ordered: ${data.numPizzas}</p>
+    <p>Pizza toppings: ${data.numPizzas}</p>
+    <p>Pickup or Delivery: ${data.pickupOrDelivery}</p>
+    <p>Payment method: ${data.paymentType}</p>
+  </section>
+</body>
+
+</html>
+`;
+
+const createOrder = () => {
+  promptOrder()
+    .then((response) => writeFileAsync("index.html", genOrderHTML(response)))
+    .then(() => console.log("Success!"))
+    .catch((err) => console.error(err));
+};
+
+// Script Execution
+createOrder();
+
+// .then((response) => {
+//   console.log(response);
+
+//   const orderName = `order-${response.name
+//     .toLowerCase()
+//     .split(" ")
+//     .join("")}.txt`;
+
+//   fs.writeFile(orderName, JSON.stringify(response, null, "\t"), (err) =>
+//     err ? console.error(err) : console.log("Success!")
+//   );
+// });
