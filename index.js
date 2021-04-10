@@ -73,16 +73,3 @@ const createOrder = () => {
 
 // Script Execution
 createOrder();
-
-// .then((response) => {
-//   console.log(response);
-
-//   const orderName = `order-${response.name
-//     .toLowerCase()
-//     .split(" ")
-//     .join("")}.txt`;
-
-//   fs.writeFile(orderName, JSON.stringify(response, null, "\t"), (err) =>
-//     err ? console.error(err) : console.log("Success!")
-//   );
-// });
