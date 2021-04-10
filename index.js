@@ -1,8 +1,7 @@
-//
+// Packages
 const fs = require("fs");
 const inquirer = require("inquirer");
 
-//
 // Prompt user with questions
 inquirer
   .prompt([
